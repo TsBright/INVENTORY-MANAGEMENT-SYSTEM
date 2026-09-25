@@ -1,0 +1,2 @@
+@import '../styles.css';
+.receipt-page{background:#f7f7f9}.receipt-page>header{width:100%}@media print{.receipt-page>header{display:none}.receipt{margin:0;border:0;box-shadow:none;width:100%}}

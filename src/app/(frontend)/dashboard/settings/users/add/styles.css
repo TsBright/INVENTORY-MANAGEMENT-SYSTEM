@@ -1,0 +1,4 @@
+@import url('../../styles.css');
+@import url('../styles.css');
+.form-content { max-width: 680px; margin: auto; }.form-card { padding: 18px; border: 1px solid #cdd0d8; background: white; }.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px 18px; }.field { display: grid; gap: 5px; }.field.full { margin-bottom: 12px; }.field label { color: #333b48; font-size: 9px; font-weight: 700; }.field input, .field select { height: 31px; padding: 0 9px; border: 1px solid #ccd0d8; background: white; color: #242933; font: inherit; font-size: 10px; outline-color: #5d7996; }.field input::placeholder { color: #8b929e; }.form-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #d8d9df; }.form-message { margin: 12px 0 0; padding: 8px; background: #e3f5ed; color: #167657; font-size: 9px; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }

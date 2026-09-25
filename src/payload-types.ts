@@ -68,6 +68,18 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    businesses: Business;
+    products: Product;
+    categories: Category;
+    suppliers: Supplier;
+    customers: Customer;
+    sales: Sale;
+    'sale-items': SaleItem;
+    purchases: Purchase;
+    'purchase-items': PurchaseItem;
+    'inventory-movements': InventoryMovement;
+    notifications: Notification;
+    'audit-logs': AuditLog;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -77,6 +89,18 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    businesses: BusinessesSelect<false> | BusinessesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    suppliers: SuppliersSelect<false> | SuppliersSelect<true>;
+    customers: CustomersSelect<false> | CustomersSelect<true>;
+    sales: SalesSelect<false> | SalesSelect<true>;
+    'sale-items': SaleItemsSelect<false> | SaleItemsSelect<true>;
+    purchases: PurchasesSelect<false> | PurchasesSelect<true>;
+    'purchase-items': PurchaseItemsSelect<false> | PurchaseItemsSelect<true>;
+    'inventory-movements': InventoryMovementsSelect<false> | InventoryMovementsSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
+    'audit-logs': AuditLogsSelect<false> | AuditLogsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -123,6 +147,10 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  fullName: string;
+  role?: ('admin' | 'owner' | 'manager' | 'cashier') | null;
+  business?: (string | null) | Business;
+  isActive?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -144,6 +172,49 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "businesses".
+ */
+export interface Business {
+  id: string;
+  name: string;
+  address?: string | null;
+  phone?: string | null;
+  taxRate?: number | null;
+  currency?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  barcode?: string | null;
+  category: string | Category;
+  costPrice: number;
+  sellingPrice: number;
+  stockQuantity: number;
+  reorderLevel?: number | null;
+  image?: (string | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: string;
+  name: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -160,6 +231,140 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers".
+ */
+export interface Supplier {
+  id: string;
+  companyName: string;
+  contactPerson?: string | null;
+  phone: string;
+  email?: string | null;
+  address?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers".
+ */
+export interface Customer {
+  id: string;
+  fullName: string;
+  phone: string;
+  email?: string | null;
+  loyaltyPoints?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales".
+ */
+export interface Sale {
+  id: string;
+  receiptNumber: string;
+  cashier: string | User;
+  customer?: (string | null) | Customer;
+  business: string | Business;
+  paymentMethod?: ('cash' | 'mobile_money' | 'card') | null;
+  subtotal: number;
+  tax?: number | null;
+  totalAmount: number;
+  status?: ('completed' | 'cancelled') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sale-items".
+ */
+export interface SaleItem {
+  id: string;
+  sale: string | Sale;
+  product: string | Product;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases".
+ */
+export interface Purchase {
+  id: string;
+  poNumber: string;
+  supplier: string | Supplier;
+  status?: ('draft' | 'ordered' | 'received' | 'cancelled') | null;
+  totalCost: number;
+  expectedDelivery?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchase-items".
+ */
+export interface PurchaseItem {
+  id: string;
+  purchase: string | Purchase;
+  product: string | Product;
+  quantity: number;
+  unitCost: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventory-movements".
+ */
+export interface InventoryMovement {
+  id: string;
+  product: string | Product;
+  type: 'SALE' | 'PURCHASE' | 'MANUAL_ADJUSTMENT' | 'DAMAGE';
+  quantity: number;
+  reference?: string | null;
+  user?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type?: ('LOW_STOCK' | 'OUT_OF_STOCK' | 'SYSTEM') | null;
+  isRead?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-logs".
+ */
+export interface AuditLog {
+  id: string;
+  user?: (string | null) | User;
+  action: string;
+  collectionName: string;
+  details?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -188,6 +393,54 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'businesses';
+        value: string | Business;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: string | Category;
+      } | null)
+    | ({
+        relationTo: 'suppliers';
+        value: string | Supplier;
+      } | null)
+    | ({
+        relationTo: 'customers';
+        value: string | Customer;
+      } | null)
+    | ({
+        relationTo: 'sales';
+        value: string | Sale;
+      } | null)
+    | ({
+        relationTo: 'sale-items';
+        value: string | SaleItem;
+      } | null)
+    | ({
+        relationTo: 'purchases';
+        value: string | Purchase;
+      } | null)
+    | ({
+        relationTo: 'purchase-items';
+        value: string | PurchaseItem;
+      } | null)
+    | ({
+        relationTo: 'inventory-movements';
+        value: string | InventoryMovement;
+      } | null)
+    | ({
+        relationTo: 'notifications';
+        value: string | Notification;
+      } | null)
+    | ({
+        relationTo: 'audit-logs';
+        value: string | AuditLog;
       } | null)
     | ({
         relationTo: 'media';
@@ -240,6 +493,10 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  fullName?: T;
+  role?: T;
+  business?: T;
+  isActive?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -256,6 +513,163 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "businesses_select".
+ */
+export interface BusinessesSelect<T extends boolean = true> {
+  name?: T;
+  address?: T;
+  phone?: T;
+  taxRate?: T;
+  currency?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  sku?: T;
+  barcode?: T;
+  category?: T;
+  costPrice?: T;
+  sellingPrice?: T;
+  stockQuantity?: T;
+  reorderLevel?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers_select".
+ */
+export interface SuppliersSelect<T extends boolean = true> {
+  companyName?: T;
+  contactPerson?: T;
+  phone?: T;
+  email?: T;
+  address?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers_select".
+ */
+export interface CustomersSelect<T extends boolean = true> {
+  fullName?: T;
+  phone?: T;
+  email?: T;
+  loyaltyPoints?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sales_select".
+ */
+export interface SalesSelect<T extends boolean = true> {
+  receiptNumber?: T;
+  cashier?: T;
+  customer?: T;
+  business?: T;
+  paymentMethod?: T;
+  subtotal?: T;
+  tax?: T;
+  totalAmount?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sale-items_select".
+ */
+export interface SaleItemsSelect<T extends boolean = true> {
+  sale?: T;
+  product?: T;
+  quantity?: T;
+  unitPrice?: T;
+  totalPrice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases_select".
+ */
+export interface PurchasesSelect<T extends boolean = true> {
+  poNumber?: T;
+  supplier?: T;
+  status?: T;
+  totalCost?: T;
+  expectedDelivery?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchase-items_select".
+ */
+export interface PurchaseItemsSelect<T extends boolean = true> {
+  purchase?: T;
+  product?: T;
+  quantity?: T;
+  unitCost?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventory-movements_select".
+ */
+export interface InventoryMovementsSelect<T extends boolean = true> {
+  product?: T;
+  type?: T;
+  quantity?: T;
+  reference?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  title?: T;
+  message?: T;
+  type?: T;
+  isRead?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-logs_select".
+ */
+export interface AuditLogsSelect<T extends boolean = true> {
+  user?: T;
+  action?: T;
+  collectionName?: T;
+  details?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
